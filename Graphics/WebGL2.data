@@ -1,0 +1,35 @@
+#version 330 core
+
+in vec3 fColor;
+in vec3 fNormal;
+
+out vec4 FragColor;
+
+void main()
+{
+   if (distance(fNormal, vec3(0.0f,0.0f,0.0f)) < 0.1f) {
+      FragColor = vec4(fColor, 1.0f);
+   } else {
+      FragColor = vec4((normalize(fNormal)+1.0f)/2.0f, 1.0f);
+   }
+}#version 330 core
+
+layout (location = 0) in vec3 vPos;
+layout (location = 1) in vec3 vColor;
+layout (location = 2) in vec3 vNormal;
+layout (location = 3) in vec3 vTex;
+
+uniform mat4 M;
+uniform mat4 VP;
+
+out vec3 fColor;
+out vec3 fNormal;
+
+void main()
+{
+   gl_Position = VP * M * vec4(vPos, 1.0f);
+   mat4 normalMatrix = mat4(mat3((transpose(inverse(M)))));
+   fColor = vColor;
+   fNormal = (normalMatrix * vec4(vNormal, 1.0f)).xyz;
+
+}
